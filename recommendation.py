@@ -4,10 +4,10 @@ def recommend_stocks(df):
     for _, row in df.iterrows():
         rec = "Hold"
         explanation = "Stock has balanced valuation and performance."
-        if row["Final Score"] >= 25 or row["RSI"] < 30:
+        if row["Final Score"] >= 25 and row["RSI"] < 30:
             rec = "Buy"
             explanation = "Stock is undervalued with strong fundamentals and is oversold."
-        elif row["Final Score"] <= 10 or row["RSI"] > 70:
+        elif row["Final Score"] <= 10 and row["RSI"] > 70:
             rec = "Sell"
             explanation = "Stock is overvalued and overbought, signaling a potential correction."
         recommendations.append({

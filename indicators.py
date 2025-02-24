@@ -1,5 +1,5 @@
 # Function to calculate stock price volatility
-def get_volatility(ticker, period="3y"):
+def get_volatility(ticker, period="2wk"):
     stock = yf.Ticker(ticker)
     df = stock.history(period=period)
     return np.std(df["Close"].pct_change()) * 100  # Convert to percentage
@@ -9,7 +9,7 @@ df["Volatility (%)"] = df["Ticker"].apply(get_volatility)
 df["Volatility Score"] = df["Volatility (%)"].apply(score_volatility)
 
 # Function to calculate RSI (Relative Strength Index)
-def get_rsi(ticker, period="6mo"):
+def get_rsi(ticker, period="2wk"):
     stock = yf.Ticker(ticker)
     df = stock.history(period=period)
     delta = df["Close"].diff()

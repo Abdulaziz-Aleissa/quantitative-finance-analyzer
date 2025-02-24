@@ -4,7 +4,7 @@ def score_pe(pe):
     if pe <= 10: return 5
     elif pe <= 15: return 4
     elif pe <= 20: return 3
-    elif pe <= 25: return 3
+    elif pe <= 25: return 2
     else: return 1
 
 def score_pb(pb):
