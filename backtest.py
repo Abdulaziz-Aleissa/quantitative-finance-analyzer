@@ -3,7 +3,7 @@
 # ============================
 
 # Function to get stock performance (Cumulative Return)
-def get_stock_performance(ticker, period="3y"):
+def get_stock_performance(ticker, period="5y"):
     stock = yf.Ticker(ticker)
     df = stock.history(period=period)
     df["Cumulative Return"] = ((1 + df["Close"].pct_change()).cumprod() - 1) * 100
@@ -44,5 +44,5 @@ fig.update_layout(
 # Show interactive plot
 #fig.show()
 pn.extension()
-popup = pn.panel(fig, width=2560, height=1440)
+popup = pn.panel(fig, width=1000, height=600)
 popup.show()

@@ -6,7 +6,7 @@ from datetime import datetime
 import panel as pn
 from IPython.display import display
 
-tickers = ["AAPL", "NVDA", "MSFT", "AMZN", "GOOGL","GOOG", "META", "TSLA", "AMD","lcid"]
+tickers = ["AAPL", "NVDA", "MSFT", "AMZN", "GOOGL","GOOG", "META", "TSLA", "AMD","RKLB"]
 
 #tickers = ["1150.SR", "1120.SR", "4338.SR", "7010.SR", "2222.SR"]
 # Function to get financial data
