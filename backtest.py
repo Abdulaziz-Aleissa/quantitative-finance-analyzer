@@ -1,7 +1,3 @@
-# ============================
-# BACKTEST PERFORMANCE PLOT
-# ============================
-
 # Function to get stock performance (Cumulative Return)
 def get_stock_performance(ticker, period="3y"):
     stock = yf.Ticker(ticker)
@@ -21,7 +17,6 @@ df_perf["S&P 500"] = sp500
 # Create Interactive Plotly Figure
 fig = go.Figure()
 
-# Add each stock's performance to the plot
 for stock in df_perf.columns:
     fig.add_trace(go.Scatter(
         x=df_perf.index, 
