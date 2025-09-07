@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Time Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .summary-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .summary-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .day-container {
+            margin-bottom: 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .day-container:hover {
+            border-color: #4facfe;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.2);
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-content {
+            padding: 20px;
+            background: #f8f9ff;
+        }
+
+        .input-method {
+            margin-bottom: 20px;
+        }
+
+        .input-method label {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .input-method input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            min-width: 80px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hours-display {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e1e8ed;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .hours-display h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .hours-display .hours {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .overflow-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .tomorrow-calculator {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .tomorrow-calculator h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .tomorrow-result {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tomorrow-details {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .reset-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .time-inputs {
+                flex-direction: column;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Work Time Calculator</h1>
+            <p>Track your weekly hours from Sunday to Thursday (40 hours total)</p>
+        </div>
+        
+        <div class="content">
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Total Hours Worked</h3>
+                    <div class="value" id="totalHours">0.0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Hours Remaining</h3>
+                    <div class="value" id="remainingHours">40.0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Days Remaining</h3>
+                    <div class="value" id="daysRemaining">5</div>
+                </div>
+            </div>
+
+            <div id="dayContainers">
+                <!-- Day containers will be generated by JavaScript -->
+            </div>
+
+            <div class="tomorrow-calculator">
+                <h3>🕒 Tomorrow's Schedule</h3>
+                <div class="tomorrow-result" id="tomorrowResult">Start at 9:00 AM to work 8.0 hours</div>
+                <div class="tomorrow-details" id="tomorrowDetails">You can leave at 5:00 PM</div>
+            </div>
+
+            <button class="reset-button" onclick="resetCalculator()">🔄 Reset All Data</button>
+        </div>
+    </div>
+
+    <script>
+        // Work week configuration
+        const WORK_WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+        const TOTAL_WORK_HOURS = 40;
+        const HOURS_PER_DAY = 8;
+
+        // Data storage
+        let workData = {};
+
+        // Initialize work data
+        function initializeWorkData() {
+            WORK_WEEK_DAYS.forEach(day => {
+                workData[day] = {
+                    inputMethod: 'times', // 'times' or 'total'
+                    entryTime: '',
+                    leaveTime: '',
+                    totalHours: 0,
+                    actualHours: 0,
+                    overflowHours: 0
+                };
+            });
+        }
+
+        // Create day containers
+        function createDayContainers() {
+            const container = document.getElementById('dayContainers');
+            container.innerHTML = '';
+
+            WORK_WEEK_DAYS.forEach((day, index) => {
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'day-container';
+                dayContainer.innerHTML = `
+                    <div class="day-header">
+                        <span>${day} (Day ${index + 1})</span>
+                        <span class="day-status" id="status-${day}">0.0 hours</span>
+                    </div>
+                    <div class="day-content">
+                        <div class="input-method">
+                            <label>
+                                <input type="radio" name="method-${day}" value="times" 
+                                       onchange="toggleInputMethod('${day}', 'times')" checked>
+                                Enter entry and leave times
+                            </label>
+                        </div>
+                        <div class="input-method">
+                            <label>
+                                <input type="radio" name="method-${day}" value="total" 
+                                       onchange="toggleInputMethod('${day}', 'total')">
+                                Enter total work hours
+                            </label>
+                        </div>
+
+                        <div id="times-input-${day}" class="time-inputs">
+                            <div class="input-group">
+                                <label>Entry:</label>
+                                <input type="time" id="entry-${day}" 
+                                       onchange="calculateHoursFromTimes('${day}')" 
+                                       value="">
+                            </div>
+                            <div class="input-group">
+                                <label>Leave:</label>
+                                <input type="time" id="leave-${day}" 
+                                       onchange="calculateHoursFromTimes('${day}')" 
+                                       value="">
+                            </div>
+                        </div>
+
+                        <div id="total-input-${day}" class="input-group" style="display: none;">
+                            <label>Total Hours:</label>
+                            <input type="number" id="total-${day}" 
+                                   min="0" max="24" step="0.5" 
+                                   onchange="setTotalHours('${day}')" 
+                                   placeholder="0.0">
+                        </div>
+
+                        <div class="hours-display">
+                            <h4>Calculated Work Hours</h4>
+                            <div class="hours" id="calculated-${day}">0.0 hours</div>
+                        </div>
+
+                        <div id="overflow-${day}" class="overflow-notice" style="display: none;">
+                            <strong>Overflow:</strong> <span id="overflow-amount-${day}">0.0</span> hours will carry to tomorrow
+                        </div>
+                    </div>
+                `;
+                container.appendChild(dayContainer);
+            });
+        }
+
+        // Toggle input method
+        function toggleInputMethod(day, method) {
+            workData[day].inputMethod = method;
+            
+            const timesInput = document.getElementById(`times-input-${day}`);
+            const totalInput = document.getElementById(`total-input-${day}`);
+            
+            if (method === 'times') {
+                timesInput.style.display = 'flex';
+                totalInput.style.display = 'none';
+                // Recalculate from times if they exist
+                calculateHoursFromTimes(day);
+            } else {
+                timesInput.style.display = 'none';
+                totalInput.style.display = 'flex';
+                // Use the total hours input
+                setTotalHours(day);
+            }
+        }
+
+        // Calculate hours from entry/leave times
+        function calculateHoursFromTimes(day) {
+            const entryTime = document.getElementById(`entry-${day}`).value;
+            const leaveTime = document.getElementById(`leave-${day}`).value;
+            
+            workData[day].entryTime = entryTime;
+            workData[day].leaveTime = leaveTime;
+            
+            if (entryTime && leaveTime) {
+                const entry = new Date(`2024-01-01 ${entryTime}`);
+                const leave = new Date(`2024-01-01 ${leaveTime}`);
+                
+                // Handle overnight shifts
+                if (leave < entry) {
+                    leave.setDate(leave.getDate() + 1);
+                }
+                
+                const diffMs = leave.getTime() - entry.getTime();
+                const hours = diffMs / (1000 * 60 * 60);
+                
+                workData[day].totalHours = Math.max(0, hours);
+            } else {
+                workData[day].totalHours = 0;
+            }
+            
+            updateDayDisplay(day);
+            updateSummary();
+        }
+
+        // Set total hours directly
+        function setTotalHours(day) {
+            const totalInput = document.getElementById(`total-${day}`);
+            const hours = parseFloat(totalInput.value) || 0;
+            
+            workData[day].totalHours = Math.max(0, hours);
+            
+            updateDayDisplay(day);
+            updateSummary();
+        }
+
+        // Update day display with overflow handling
+        function updateDayDisplay(day) {
+            const dayIndex = WORK_WEEK_DAYS.indexOf(day);
+            const previousDayOverflow = dayIndex > 0 ? workData[WORK_WEEK_DAYS[dayIndex - 1]].overflowHours : 0;
+            
+            // Add previous day's overflow to current day's hours
+            const totalHoursWithOverflow = workData[day].totalHours + previousDayOverflow;
+            
+            // Calculate actual work hours (max 8 hours per day)
+            workData[day].actualHours = Math.min(totalHoursWithOverflow, HOURS_PER_DAY);
+            
+            // Calculate overflow to next day
+            workData[day].overflowHours = Math.max(0, totalHoursWithOverflow - HOURS_PER_DAY);
+            
+            // Update display elements
+            document.getElementById(`status-${day}`).textContent = `${workData[day].actualHours.toFixed(1)} hours`;
+            document.getElementById(`calculated-${day}`).textContent = `${workData[day].actualHours.toFixed(1)} hours`;
+            
+            // Show/hide overflow notice
+            const overflowDiv = document.getElementById(`overflow-${day}`);
+            if (workData[day].overflowHours > 0) {
+                overflowDiv.style.display = 'block';
+                document.getElementById(`overflow-amount-${day}`).textContent = workData[day].overflowHours.toFixed(1);
+            } else {
+                overflowDiv.style.display = 'none';
+            }
+            
+            // Update next day if overflow affects it
+            if (dayIndex < WORK_WEEK_DAYS.length - 1) {
+                const nextDay = WORK_WEEK_DAYS[dayIndex + 1];
+                updateDayDisplay(nextDay);
+            }
+        }
+
+        // Update summary cards
+        function updateSummary() {
+            let totalWorked = 0;
+            WORK_WEEK_DAYS.forEach(day => {
+                totalWorked += workData[day].actualHours;
+            });
+            
+            const remaining = Math.max(0, TOTAL_WORK_HOURS - totalWorked);
+            const daysRemaining = WORK_WEEK_DAYS.filter(day => workData[day].actualHours < HOURS_PER_DAY).length;
+            
+            document.getElementById('totalHours').textContent = totalWorked.toFixed(1);
+            document.getElementById('remainingHours').textContent = remaining.toFixed(1);
+            document.getElementById('daysRemaining').textContent = daysRemaining;
+            
+            updateTomorrowCalculation(remaining, daysRemaining);
+        }
+
+        // Calculate tomorrow's schedule
+        function updateTomorrowCalculation(remainingHours, daysRemaining) {
+            const tomorrowResult = document.getElementById('tomorrowResult');
+            const tomorrowDetails = document.getElementById('tomorrowDetails');
+            
+            if (daysRemaining === 0) {
+                tomorrowResult.textContent = "✅ Week Complete!";
+                tomorrowDetails.textContent = "You've completed your 40-hour work week.";
+                return;
+            }
+            
+            if (remainingHours <= 0) {
+                tomorrowResult.textContent = "✅ Target Reached!";
+                tomorrowDetails.textContent = "You've already worked your required hours.";
+                return;
+            }
+            
+            // Calculate hours needed tomorrow
+            const hoursPerRemainingDay = remainingHours / daysRemaining;
+            const hoursNeededTomorrow = Math.min(hoursPerRemainingDay, HOURS_PER_DAY);
+            
+            // Default start time
+            const defaultStartTime = "09:00";
+            const startTime = new Date(`2024-01-01 ${defaultStartTime}`);
+            const endTime = new Date(startTime.getTime() + (hoursNeededTomorrow * 60 * 60 * 1000));
+            
+            const endTimeString = endTime.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            
+            tomorrowResult.textContent = `Start at 9:00 AM to work ${hoursNeededTomorrow.toFixed(1)} hours`;
+            tomorrowDetails.textContent = `You can leave at ${endTimeString}`;
+        }
+
+        // Reset calculator
+        function resetCalculator() {
+            if (confirm('Are you sure you want to reset all work time data?')) {
+                initializeWorkData();
+                
+                // Clear all inputs
+                WORK_WEEK_DAYS.forEach(day => {
+                    document.getElementById(`entry-${day}`).value = '';
+                    document.getElementById(`leave-${day}`).value = '';
+                    document.getElementById(`total-${day}`).value = '';
+                    
+                    // Reset to times input method
+                    document.querySelector(`input[name="method-${day}"][value="times"]`).checked = true;
+                    toggleInputMethod(day, 'times');
+                    
+                    updateDayDisplay(day);
+                });
+                
+                updateSummary();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('workTimeCalculatorData', JSON.stringify(workData));
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('workTimeCalculatorData');
+            if (saved) {
+                try {
+                    const parsedData = JSON.parse(saved);
+                    // Verify the data structure is valid
+                    if (parsedData && typeof parsedData === 'object') {
+                        workData = parsedData;
+                        
+                        // Restore UI state
+                        WORK_WEEK_DAYS.forEach(day => {
+                            if (workData[day]) {
+                                const data = workData[day];
+                                
+                                // Set input method
+                                document.querySelector(`input[name="method-${day}"][value="${data.inputMethod}"]`).checked = true;
+                                toggleInputMethod(day, data.inputMethod);
+                                
+                                // Set values
+                                if (data.inputMethod === 'times') {
+                                    document.getElementById(`entry-${day}`).value = data.entryTime || '';
+                                    document.getElementById(`leave-${day}`).value = data.leaveTime || '';
+                                } else {
+                                    document.getElementById(`total-${day}`).value = data.totalHours || '';
+                                }
+                                
+                                updateDayDisplay(day);
+                            }
+                        });
+                        
+                        updateSummary();
+                    }
+                } catch (e) {
+                    console.error('Error loading saved data:', e);
+                    initializeWorkData();
+                }
+            }
+        }
+
+        // Auto-save on any change
+        function setupAutoSave() {
+            // Save data whenever inputs change
+            const observer = new MutationObserver(() => {
+                saveData();
+            });
+            
+            // Also save on input events
+            document.addEventListener('input', saveData);
+            document.addEventListener('change', saveData);
+        }
+
+        // Initialize the application
+        function init() {
+            initializeWorkData();
+            createDayContainers();
+            loadData();
+            setupAutoSave();
+            updateSummary();
+        }
+
+        // Start the application when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
